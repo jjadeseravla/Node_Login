@@ -7,6 +7,7 @@ var session = require('express-session'); // brings in modules so we can use the
 
 var morgan = require('morgan'); //logs
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
 
 var configDB = require('./config/database.js'); //brings in config folder and stating route of file
 //mongoose.connect(configDB.url);//tell mongoose to connect to server
@@ -18,9 +19,12 @@ mongoose.connect(configDB.url);//tell mongoose to connect to server
 
 app.use(morgan('dev')); //request to server will use app morgan
 app.use(cookieParser()); //sets request.cookies variable and saves it in there but dont really need anymore
+app.use(bodyParser.urlencoded({extended: true})); //allows any objects to be sent through, not just strings etc
 app.use(session({secret: 'anystringoftext',// requires 3 things, secret is a key code that its gona require for cookies
                  saveUninitialized: true,// if a session comes in and its not initialized, will still save on database
                  resave: true})); // even if nothing is saved you can still save to database
+
+app.set('view engine', 'ejs'); //where our pages are going to reside
 
 // app.use('/', function(req, res){
 //   res.send('hello');
