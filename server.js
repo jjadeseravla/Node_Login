@@ -19,7 +19,7 @@ mongoose.connect(configDB.url);//tell mongoose to connect to server
 
 app.use(morgan('dev')); //request to server will use app morgan
 app.use(cookieParser()); //sets request.cookies variable and saves it in there but dont really need anymore
-app.use(bodyParser.urlencoded({extended: true})); //allows any objects to be sent through, not just strings etc
+app.use(bodyParser.urlencoded({extended: false})); //allows any objects to be sent through, not just strings etc, but put it in false as only sending strings here
 app.use(session({secret: 'anystringoftext',// requires 3 things, secret is a key code that its gona require for cookies
                  saveUninitialized: true,// if a session comes in and its not initialized, will still save on database
                  resave: true})); // even if nothing is saved you can still save to database

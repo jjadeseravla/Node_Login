@@ -4,6 +4,21 @@ module.exports = function(app){
     res.render('index.ejs');
   });
 
+  app.get('/signup', function(req, res){
+    res.render('signup.js', { message: 'Server sengin to ejs template'});
+  });
+
+  app.post('/signup', function(req, res){
+    var newUser = new User();
+    newUser.local.username = req.body.email; //on ejs template username is called email
+    newUser.local.password = req.body.password;
+    newUser.save(function(err){
+      if(err)
+        throw err;
+    });
+    res.rediret('/');
+  });
+
   app.get('/:username/:password', function(req, res){ //params: what you type in the url
     var newUser = new User();
     newUser.local.username = req.params.username;
