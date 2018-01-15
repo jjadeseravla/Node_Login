@@ -11,6 +11,8 @@
   "dependencies": {
     "ejs": "latest",
     "express": "^4.16.2",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "cookie-parser": "latest",
+    "express-session": "latest"
   }
 }
