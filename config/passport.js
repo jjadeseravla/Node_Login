@@ -19,14 +19,14 @@ module.exports = function(passport){//allows this section to be available to the
     },
       function(req, email, password, done){ //done is a callback
         process.nextTick(function(){// a node.js function to make it asynchronous, so unless data is sent back, our lookup in database wont fire. this section doesnt execute til everything else is done
-          User.findOne({'local.email': email}, function(err, user){
+          User.findOne({'local.username': email}, function(err, user){
             if(err)
               return done(err); //return err back to whoever called it
             if(user){ //if theres a user with this email already in db, then dont want to reregister user, we instead let them know with a flash err on screen
-              return done(null, false, req.flash('signupMessage', 'The email you have types in is already taken'));
+              return done(null, false, req.flash('signupMessage', 'The email you have typed in has already been taken'));
             } else {
               var newUser = new User();
-              newUser.local.email = email;
+              newUser.local.username = email;
               newUser.local.password = password; //just saving these as free text but need to hash passwords for security
 
               newUser.save(function(err){
