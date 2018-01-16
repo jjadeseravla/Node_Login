@@ -4,6 +4,15 @@ module.exports = function(app, passport){
     res.render('index.ejs');
   });
 
+  app.get('/login', function(req, res){
+    res.render('login.ejs', { message: req.flash('loginMessage') }); //route for login page and req.flash if there is an error
+  });
+  app.post('/login', passportAuthenticate('local-login', {
+    successRedirect: '/profile',
+    faliureRedirect:'/login',
+    failureFlash: true
+  }));
+
   app.get('/signup', function(req, res){
     res.render('signup.ejs', { message: req.flash('signupMessage') });
   });
