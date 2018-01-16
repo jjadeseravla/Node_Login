@@ -1,5 +1,5 @@
 var User = require('./models/user'); //bring in the user.js file
-module.exports = function(app){
+module.exports = function(app, passport){
   app.get('/', function(req, res){
     res.render('index.ejs');
   });
