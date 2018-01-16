@@ -9,12 +9,15 @@
   "author": "Jade",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "latest",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "latest",
     "ejs": "latest",
     "express": "^4.16.2",
-    "morgan": "^1.9.0",
-    "cookie-parser": "latest",
     "express-session": "latest",
     "mongoose": "latest",
-    "body-parser": "latest"
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
   }
 }
