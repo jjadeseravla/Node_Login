@@ -3,7 +3,7 @@ var LocalStrategy = require('passport-local').Strategy
 var User = require('../app/models/user');//bring in user schema we created for our database
 
 module.exports = function(passport){//allows this section to be available to the rest of our program
-  password.serializeUser(function(user, done){
+  passport.serializeUser(function(user, done){
     done(null, user.id);
   });
 
@@ -32,7 +32,7 @@ module.exports = function(passport){//allows this section to be available to the
               newUser.save(function(err){
                 if(err)
                   throw err;
-                  reuturn done(null, newUser); //otherwise return done(no err), which is null and return our new user
+                  return done(null, newUser); //otherwise return done(no err), which is null and return our new user
               })
             }
           })//finding a user in the DB and if theyre not there we can sign them up.  look for an email in DB that matches

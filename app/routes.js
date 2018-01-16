@@ -5,19 +5,14 @@ module.exports = function(app){
   });
 
   app.get('/signup', function(req, res){
-    res.render('signup.ejs', { message: 'Server sending to ejs template (the client)'});
+    res.render('signup.ejs', { message: req.flash('signupMessage') });
   });
 
-  app.post('/signup', function(req, res){
-    var newUser = new User();
-    newUser.local.username = req.body.email; //on ejs template username is called email
-    newUser.local.password = req.body.password;//body parser puts all of our form data into a request.object so we can get data from this
-    newUser.save(function(err){
-      if(err)
-        throw err;
-    });
-    res.redirect('/');
-  });
+  app.post('/signup', passport.authenticate('local-signup', {
+    successRedirect: '/', //where we want them to go if theyve had a successful sign up
+    failureRedirect: '/signup', //failure eg put an email thats already registered
+    failureFlash: true //if they tried to sign up an email already in use are they expecting a flash back? yes so true
+  }));
 
   app.get('/:username/:password', function(req, res){ //params: what you type in the url
     var newUser = new User();

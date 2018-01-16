@@ -8,7 +8,7 @@ var session = require('express-session'); // brings in modules so we can use the
 var morgan = require('morgan'); //logs
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var passport = require('passsport');
+var passport = require('passport');
 var flash = require('connect-flash');
 
 var configDB = require('./config/database.js'); //brings in config folder and stating route of file
