@@ -38,7 +38,26 @@ module.exports = function(passport){//allows this section to be available to the
           })//finding a user in the DB and if theyre not there we can sign them up.  look for an email in DB that matches
       });
     }
-  ))
+  ));
+  passport.use('local-login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+  function(req, email, passsword, done) {
+    process.nextTick(function(){ //do it after data comes back with nextTick, so waiting for client to give username, email, password and callback
+      User.find({ 'local.username': email}, function(err, user){ //look in mongoDB by using mongoose, looking for a local username
+      if(err)
+        return done(err);
+      if(!user)
+        return done(null, false, req.flash('loginMessage', 'No user found')); //no error but failed attempt at logging in
+      if(user.local.password != password) //checks if password is correct
+        return done(null, false, req.flash('loginMessage', 'invalid password'));
+      return done(null, user); //return null (no error) and our user
+      })
+    })
+  }
+)) //local login strategy
 }
 //serialise a user: take large object and break it down to something that shows its simplest form. eg user with username/password etc and we try save it in session storage
 //(eg go to website and it knows youre logged in), its just using a user id to tell its you

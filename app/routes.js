@@ -7,7 +7,7 @@ module.exports = function(app, passport){
   app.get('/login', function(req, res){
     res.render('login.ejs', { message: req.flash('loginMessage') }); //route for login page and req.flash if there is an error
   });
-  app.post('/login', passportAuthenticate('local-login', {
+  app.post('/login', passport.authenticate('local-login', {
     successRedirect: '/profile',
     faliureRedirect:'/login',
     failureFlash: true
@@ -23,6 +23,10 @@ module.exports = function(app, passport){
     failureFlash: true //if they tried to sign up an email already in use are they expecting a flash back? yes so true
   }));
 
+  app.get('/profile', isLoggedIn, function(req, res) {
+    res.render('profile.ejs', { user: req.use}) //send it the object: user
+  }); //isLoggedIn is middleware have to go through for anyone who goes to profile
+
   app.get('/:username/:password', function(req, res){ //params: what you type in the url
     var newUser = new User();
     newUser.local.username = req.params.username;
@@ -34,4 +38,11 @@ module.exports = function(app, passport){
     });
     res.send("Success!");
   })
+};
+
+function isLoggedIn(req, res, next) {
+  if(req.isAuthenticated()){
+    return next(); //is user has already been authenticated we want to continue
+  }
+  res.redirect('/login'); //otherwise redirect to login page
 }
