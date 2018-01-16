@@ -1,3 +1,3 @@
 # Node_Login
 
-start mongod.exe in seperate console in bin for mongo
+start mongod.exe in separate console in bin for mongo

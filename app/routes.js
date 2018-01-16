@@ -5,7 +5,7 @@ module.exports = function(app){
   });
 
   app.get('/signup', function(req, res){
-    res.render('signup.js', { message: 'Server sengin to ejs template'});
+    res.render('signup.ejs', { message: 'Server sending to ejs template'});
   });
 
   app.post('/signup', function(req, res){
