@@ -44,9 +44,9 @@ module.exports = function(passport){//allows this section to be available to the
     passwordField: 'password',
     passReqToCallback: true
   },
-  function(req, email, passsword, done) {
+  function(req, email, password, done) {
     process.nextTick(function(){ //do it after data comes back with nextTick, so waiting for client to give username, email, password and callback
-      User.find({ 'local.username': email}, function(err, user){ //look in mongoDB by using mongoose, looking for a local username
+      User.findOne({ 'local.username': email}, function(err, user){ //look in mongoDB by using mongoose, looking for a local username
       if(err)
         return done(err);
       if(!user)
