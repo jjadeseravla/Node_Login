@@ -37,6 +37,11 @@ module.exports = function(app, passport){
         throw err;
     });
     res.send("Success!");
+  });
+
+  app.get('/logout', function(req, res) {
+    req.logout(); //logout is a passport funciton that passport adds the logout to express
+    res.redirect('/');
   })
 };
 

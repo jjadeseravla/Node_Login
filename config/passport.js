@@ -44,13 +44,13 @@ module.exports = function(passport){//allows this section to be available to the
     passwordField: 'password',
     passReqToCallback: true
   },
-  function(req, email, password, done) {
+  function(req, email, password, done) { //done is our callback.
     process.nextTick(function(){ //do it after data comes back with nextTick, so waiting for client to give username, email, password and callback
       User.findOne({ 'local.username': email}, function(err, user){ //look in mongoDB by using mongoose, looking for a local username
       if(err)
         return done(err);
-      if(!user)
-        return done(null, false, req.flash('loginMessage', 'No user found')); //no error but failed attempt at logging in
+      if(!user) //if there is no user
+        return done(null, false, req.flash('loginMessage', 'No user found')); //null means no error but failed attempt at logging in
       if(user.local.password != password) //checks if password is correct
         return done(null, false, req.flash('loginMessage', 'invalid password'));
       return done(null, user); //return null (no error) and our user
