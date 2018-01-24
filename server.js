@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var flash = require('connect-flash');
+var MongoStore = require('connect-mongo')(session); //already assigned session to express-session on line 6
 
 var configDB = require('./config/database.js'); //brings in config folder and stating route of file
 //mongoose.connect(configDB.url);//tell mongoose to connect to server
@@ -25,7 +26,9 @@ app.use(cookieParser()); //sets request.cookies variable and saves it in there b
 app.use(bodyParser.urlencoded({extended: false})); //allows any objects to be sent through, not just strings etc, but put it in false as only sending strings here
 app.use(session({secret: 'anystringoftext',// requires 3 things, secret is a key code that its gona require for cookies
                  saveUninitialized: true,// if a session comes in and its not initialized, will still save on database
-                 resave: true})); // even if nothing is saved you can still save to database
+                 resave: true, // even if nothing is saved you can still save to database
+                 sotre: new MongoStore({ mongooseConnection : mongoose.connection })})); //reuse line 17
+                 //connect session just saves to servers RAM memory all the session data, so how do we save these sessions to permanent storage?
 app.use(passport.initialize()); //starts passport up
 app.use(passport.session()) //piggbacks off session on line 25 so must be underneath it.  theres only one session, but passport uses revious express session
 app.use(flash()); //to make sure all flash messages are being updated
