@@ -24,7 +24,7 @@ module.exports = function(app, passport){
   }));
 
   app.get('/profile', isLoggedIn, function(req, res) {
-    res.render('profile.ejs', { user: req.use}) //send it the object: user
+    res.render('profile.ejs', { user: req.user}) //send it the object: user.  when we get a user back thats authenticated, we'll have a req.user variable to use and we can send it to profile.ejs that can print all the info.
   }); //isLoggedIn is middleware have to go through for anyone who goes to profile
 
   app.get('/:username/:password', function(req, res){ //params: what you type in the url
@@ -40,7 +40,7 @@ module.exports = function(app, passport){
   })
 };
 
-function isLoggedIn(req, res, next) {
+function isLoggedIn(req, res, next) {  //next is last middleware
   if(req.isAuthenticated()){
     return next(); //is user has already been authenticated we want to continue
   }
