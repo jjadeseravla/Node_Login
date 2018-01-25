@@ -22,7 +22,7 @@ If you would like to download the code and try it for yourself:
 
 ``` $ mongod.exe ```
 
-- Change out auth keys in config/auth.js
+- Change out auth keys in config/database.js
 
 - Launch:
 
