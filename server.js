@@ -27,13 +27,20 @@ app.use(bodyParser.urlencoded({extended: false})); //allows any objects to be se
 app.use(session({secret: 'anystringoftext',// requires 3 things, secret is a key code that its gona require for cookies
                  saveUninitialized: true,// if a session comes in and its not initialized, will still save on database
                  resave: true, // even if nothing is saved you can still save to database
-                 sotre: new MongoStore({ mongooseConnection : mongoose.connection })})); //reuse line 17
+                 sotre: new MongoStore({ mongooseConnection: mongoose.connection })})); //reuse line 17
                  //connect session just saves to servers RAM memory all the session data, so how do we save these sessions to permanent storage?
 app.use(passport.initialize()); //starts passport up
 app.use(passport.session()) //piggbacks off session on line 25 so must be underneath it.  theres only one session, but passport uses revious express session
 app.use(flash()); //to make sure all flash messages are being updated
 
 app.set('view engine', 'ejs'); //where our pages are going to reside
+var auth = express.Router(); //create the router
+require('./app/routes/auth.js')(auth, passport); //then set router up by requiring file we set the routes in and make sure config file for router has router itself
+app.use('/auth', auth); // need to make sure user uses this router when they go to website/auth
+
+var secure = express.Router();  //user has to have already logged into our web app to view
+require('./app/routes/secure.js')(secure, passport); //configures it
+app.use('/', secure); //for all default routes that dont match /auth
 
 // app.use('/', function(req, res){
 //   res.send('hello');
