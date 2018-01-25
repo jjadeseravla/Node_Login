@@ -1,4 +1,6 @@
-var LocalStrategy = require('passport-local').Strategy
+
+var LocalStrategy = require('passport-local').Strategy;
+var BearerStrategy = require('passport-http-bearer').Strategy;
 
 var User = require('../app/models/user');//bring in user schema we created for our database
 
@@ -12,6 +14,7 @@ module.exports = function(passport){//allows this section to be available to the
       done(err, user);
     });
   });
+
     passport.use('local-signup', new LocalStrategy({
       usernameField: 'email', //rename fields they have eg username field is going to be an email.  it looks up at ejs file
       passwordField: 'password',
@@ -25,42 +28,55 @@ module.exports = function(passport){//allows this section to be available to the
             if(user){ //if theres a user with this email already in db, then dont want to reregister user, we instead let them know with a flash err on screen
               return done(null, false, req.flash('signupMessage', 'The email you have typed in has already been taken'));
             } else {
-              var newUser = new User();
-              newUser.local.username = email;
-              newUser.local.password = password; //just saving these as free text but need to hash passwords for security
+                var newUser = new User();
+                newUser.local.username = email;
+                newUser.local.password = password; //just saving these as free text but need to hash passwords for security
 
-              newUser.save(function(err){
-                if(err)
-                  throw err;
-                  return done(null, newUser); //otherwise return done(no err), which is null and return our new user
-              })
+                newUser.save(function(err){
+                  if(err)
+                    throw err;
+                    return done(null, newUser); //otherwise return done(no err), which is null and return our new user
+                  })
             }
           })//finding a user in the DB and if theyre not there we can sign them up.  look for an email in DB that matches
       });
-    }
-  ));
-  passport.use('local-login', new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password',
-    passReqToCallback: true
-  },
-  function(req, email, password, done) { //done is our callback.
-    process.nextTick(function(){ //do it after data comes back with nextTick, so waiting for client to give username, email, password and callback
-      User.findOne({ 'local.username': email}, function(err, user){ //look in mongoDB by using mongoose, looking for a local username
-      if(err)
-        return done(err);
-      if(!user) //if there is no user
-        return done(null, false, req.flash('loginMessage', 'No user found')); //null means no error but failed attempt at logging in
-      if(user.local.password != password) //checks if password is correct
-        return done(null, false, req.flash('loginMessage', 'invalid password'));
-      return done(null, user); //return null (no error) and our user
+    }));
+
+    passport.use('local-login', new LocalStrategy({
+      usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback: true
+    },
+    function(req, email, password, done) { //done is our callback.
+      process.nextTick(function(){ //do it after data comes back with nextTick, so waiting for client to give username, email, password and callback
+        User.findOne({ 'local.username': email}, function(err, user){ //look in mongoDB by using mongoose, looking for a local username
+        if(err)
+          return done(err);
+        if(!user) //if there is no user
+          return done(null, false, req.flash('loginMessage', 'No user found')); //null means no error but failed attempt at logging in
+        if(user.local.password != password) //checks if password is correct
+          return done(null, false, req.flash('loginMessage', 'invalid password'));
+        return done(null, user); //return null (no error) and our user
+        })
       })
-    })
-  }
-)) //local login strategy
-}
+    }
+  )); //local login strategy
+
+  passport.use(new BearerStrategy({},
+    function(token, done) {
+      User.findOne({ _id: token }, function(err, user) { //mongoose method of user.findOne where id matches token
+        if(!user)
+            return done(null, false); //no user so authentication has failed
+        return done(null, user); //otherwsie return back no errors and our user,  meaning authentication has passed
+      })
+    }));
+
+};
 //serialise a user: take large object and break it down to something that shows its simplest form. eg user with username/password etc and we try save it in session storage
 //(eg go to website and it knows youre logged in), its just using a user id to tell its you
 //deserialize is to get id of user to show you all of the info eg bday/username/password etc.
 
 //info on passport config is in their documentation
+
+//tokens are a unique identification string that lets you tie a request to a user
+//so when a user signs up they can use an access tokoen to request data from our api server.  its unique, and some expire.  here we use the userID as the token for authentication

@@ -26,12 +26,26 @@
 
 					<p>
 						<strong>id</strong>: <%= user._id %><br>
-						<strong>email</strong>: <%= user.local.email %><br>
+						<strong>email</strong>: <%= user.local.username %><br>
 						<strong>password</strong>: <%= user.local.password %>
 					</p>
 
 			</div>
 		</div>
+
+		<!-- Token Authentication Block -->
+		 <div class="col-sm-6">
+				 <div class="well">
+						 <h3 class="text-warning"><span class="fa fa-cogs"></span> API Token</h3>
+							 <p>
+									 <!-- <% if (user.token) { %> -->
+									 <strong>id</strong>: <%= user._id %><br>
+									 <!-- <% } else { %>
+									 <a href="/getToken" class="btn btn-warning">Get Token</a>
+									 <% } %> -->
+							 </p>
+				 </div>
+		 </div>
 
 	</div>
 
