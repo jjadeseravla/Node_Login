@@ -34,6 +34,12 @@ app.use(passport.session()) //piggbacks off session on line 25 so must be undern
 app.use(flash()); //to make sure all flash messages are being updated
 
 app.set('view engine', 'ejs'); //where our pages are going to reside
+
+var api = express.Router();
+require('./app/routes/api.js')(api, passport); //then set router up by requiring file we set the routes in and make sure config file for router has router itself
+app.use('/api', api); // need to make sure user uses this router when they go to website/auth
+
+
 var auth = express.Router(); //create the router
 require('./app/routes/auth.js')(auth, passport); //then set router up by requiring file we set the routes in and make sure config file for router has router itself
 app.use('/auth', auth); // need to make sure user uses this router when they go to website/auth
