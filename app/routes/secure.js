@@ -7,4 +7,8 @@ module.exports = function(router, passport){
       res.redirect('/auth'); //otherwise redirect to login page
 
   });
+
+  router.get('/profile', function(req, res) {
+    res.render('profile.ejs', { user: req.user })
+  });
 }
