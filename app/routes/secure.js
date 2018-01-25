@@ -11,4 +11,8 @@ module.exports = function(router, passport){
   router.get('/profile', function(req, res) {
     res.render('profile.ejs', { user: req.user })
   });
+
+  router.get('/*', function(req, res) { // star goes to any route (eg catches all, anything that you write in localhost eg localhost:8080/whatttt)
+    res.redirect('/profile'); //this router redirects to our profile if you do something dumb like try to authenticate yourself when you have already etc
+  })
 }

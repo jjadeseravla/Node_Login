@@ -49,7 +49,7 @@ app.use('/', secure); //for all default routes that dont match /auth
 //   console.log(req.session);
 // });
 
-require('./app/routes.js')(app, passport); //tells server listing apps in a separate file and pass our passport to pur routes.  so when user navigates to a certain url, routes know passport exists.
+//require('./app/routes.js')(app, passport); //tells server listing apps in a separate file and pass our passport to pur routes.  so when user navigates to a certain url, routes know passport exists.
 
 app.listen(port);
 console.log('Server running on port:' + port);
